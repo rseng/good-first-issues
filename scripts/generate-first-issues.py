@@ -5,6 +5,7 @@ import requests
 import sys
 
 here = os.path.dirname(os.path.abspath(__file__))
+print("Present working directory is %s" % here)
 api_base = "https://api.github.com/repos/{repo}/issues"
 
 # GitHub Workflow - we get variables from environment
@@ -28,7 +29,7 @@ headers = {"Authorization": f"token {token}"}
 data = {"state": "open", "labels": "good first issue"}
 
 # Documentation base is located at docs
-output_dir = os.path.join(here, os.path.abspath('..'), 'docs', '_issues')
+output_dir = os.path.join(here, 'docs', '_issues')
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
