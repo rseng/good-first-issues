@@ -1,5 +1,7 @@
 # Good First Issues
 
+![img/good-first-issues.png](img/good-first-issues.png)
+
 A GitHub action to generate a web interface with an updated set of issues. This means that:
 
  - the interface is created under docs/
@@ -44,5 +46,26 @@ a version release or commit (as shown above).
 ## Examples
 
  - [awesome-rseng](https://github.com/rseng/awesome-rseng/blob/master/.github/workflows/generate-first-issues.yml) to generate first issues from the awesome-rseng repository, with repos listed in [.github/repos.txt](https://github.com/rseng/awesome-rseng/blob/master/.github/repos.txt)
+
+## Questions
+
+## How do I customize the interface?
+
+The interface will always be generated in the docs subfolder, so
+if you haven't created it there yet, the action will generate
+it the first time around. It's up to you to add all or a subset of
+files in docs/* or docs/_issues after the content is generated.
+For example, you could add both docs and _issues
+in a next step that will commit to an existing or new branch:
+
+```
+git add docs/*
+git add docs/_issues/*
+```
+
+This means that after the original docs is added and merged,
+you should be able to customize or otherwise update the template
+to your liking. The folder won't be edited if it already exists
+beyond the _issues folder.
 
 Do you have an example? Please contribute by opening an issue or a pull request!
