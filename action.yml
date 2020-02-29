@@ -1,6 +1,9 @@
 # action.yml
 name: 'Generate First Issues Interface'
 description: 'Create an interface for good first issues for a list of repos.'
+branding:
+  icon: 'book-open'
+  color: 'blue'
 inputs:
   repos-file:
     description: 'The relative path in the repository for the repos.txt'
