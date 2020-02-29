@@ -33,7 +33,7 @@ https://github.com/singularityhub/sregistry containers,singularity
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Generate First Issues
-      uses: rseng/good-first-issues@v1
+      uses: rseng/good-first-issues@v1.0.0
       with:
         repos-file: '.github/repos.txt'
         token: ${{ secrets.GITHUB_TOKEN }}
