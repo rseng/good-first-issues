@@ -29,7 +29,7 @@ headers = {"Authorization": f"token {token}"}
 data = {"state": "open", "labels": "good first issue"}
 
 # Documentation base is located at docs
-output_dir = os.path.join(here, 'docs', '_issues')
+output_dir = "/github/workspace/docs/_issues"
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
