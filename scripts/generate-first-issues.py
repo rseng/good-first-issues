@@ -67,6 +67,7 @@ for line in lines:
             tags = tags + extra_tags
         if tags:
             tags = [x.replace(":", "").replace(" ", "-") for x in tags]
+            tags.sort()
             content += "tags: %s\n" % (",".join(tags))
         for param in ["title", "html_url"]:
             content += '%s: "%s"\n' % (param, issue[param])
