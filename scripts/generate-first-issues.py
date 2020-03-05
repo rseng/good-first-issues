@@ -10,6 +10,7 @@ api_base = "https://api.github.com/repos/{repo}/issues"
 
 # GitHub Workflow - we get variables from environment
 REPOS_FILE = os.environ.get("REPOS_FILE")
+ISSUE_LABEL = os.environ.get("ISSUE_LABEL", "good first issue")
 if not REPOS_FILE:
     sys.exit(f"{REPOS_FILE} must be defined.")
 
@@ -26,7 +27,7 @@ with open(REPOS_FILE, "r") as filey:
 
 # Must authenticate
 headers = {"Authorization": f"token {token}"}
-data = {"state": "open", "labels": "good first issue"}
+data = {"state": "open", "labels": ISSUE_LABEL}
 
 # Documentation base is located at docs
 output_dir = "/github/workspace/docs/_issues"
@@ -60,7 +61,7 @@ for line in lines:
 
         # Add labels as tags
         tags = set([x["name"] for x in issue["labels"]])
-        tags.remove("good first issue")
+        tags.remove(ISSUE_LABEL)
         tags = list(tags)
 
         if extra_tags:

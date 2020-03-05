@@ -9,6 +9,10 @@ inputs:
     description: 'The relative path in the repository for the repos.txt'
     required: true
     default: 'repos.txt'
+  label:
+    description: 'The label to generate an interface for'
+    required: true
+    default: 'good first issue'
   token:
     description: >
       Auth token used to fetch the repository.
@@ -19,3 +23,4 @@ runs:
   env:
     REPOS_FILE: ${{ inputs.repos-file }}
     GITHUB_TOKEN: ${{ inputs.token }}
+    ISSUE_LABEL: ${{ inputs.label }}
