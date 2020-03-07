@@ -11,7 +11,7 @@ Critical items to know are:
  - changed behaviour (recipe sections work differently)
 
 ## [master](https://github.com/rseng/good-first-issues/tree/master)
- - add issue label and collection folder parameters (v1.0.2)
+ - add issue label and collection folder parameters, extra tags optional (v1.0.2)
  - ensure tags are sorted (v1.0.1)
  - first tagged released associated with blog post (v1.0.0)
 

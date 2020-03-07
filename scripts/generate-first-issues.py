@@ -42,7 +42,14 @@ if not os.path.exists(output_dir):
 
 # Load repos
 for line in lines:
-    repo, extra_tags = line.strip().split(" ")
+
+    # Extra tags are optional, separated by comma
+    extra_tags = ""
+    try:
+        repo, extra_tags = line.strip().split(" ")
+    except ValueError:
+        repo = line.strip()    
+
     extra_tags = extra_tags.split(",")
     repo = "/".join(repo.split("/")[-2:])
     url = api_base.format(repo=repo)
