@@ -32,6 +32,13 @@ https://github.com/singularityhub/sregistry containers,singularity
 However, you can change this by setting this variable to something else.
 
 
+### `collection`
+
+**optional** By default, the issues will each produce a markdown file to add to the "docs" GitHub pages folder,
+in a subfolder named by this variable, which defaults to _issues. If you produce a site that has more
+than one collection, you can change this to something else.
+
+
 ## Example usage
 
 ```yaml
@@ -59,6 +66,22 @@ Here is how you might update the label used:
         label: 'bug'
         token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+Finally, if I want to instead output to a folder called `_another` (a Jekyll collection name)
+as a relative path to the docs folder, I can set that as follows:
+
+
+```yaml
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Generate First Issues
+      uses: rseng/good-first-issues@v1.0.2
+      with:
+        collection: '_another'
+        token: ${{ secrets.GITHUB_TOKEN }}
+```
+
 
 ## Examples
 

@@ -11,6 +11,7 @@ api_base = "https://api.github.com/repos/{repo}/issues"
 # GitHub Workflow - we get variables from environment
 REPOS_FILE = os.environ.get("REPOS_FILE")
 ISSUE_LABEL = os.environ.get("ISSUE_LABEL", "good first issue")
+COLLECTION_FOLDER = os.environ.get("COLLECTION_FOLDER", "_issues")
 if not REPOS_FILE:
     sys.exit(f"{REPOS_FILE} must be defined.")
 
@@ -30,7 +31,11 @@ headers = {"Authorization": f"token {token}"}
 data = {"state": "open", "labels": ISSUE_LABEL}
 
 # Documentation base is located at docs
-output_dir = "/github/workspace/docs/_issues"
+output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
+
+# Print metadata for user
+print("Issue label: [%s]" % ISSUE_LABEL)
+print("Collection output folder: [%s]" % output_dir)
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
