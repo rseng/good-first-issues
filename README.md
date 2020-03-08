@@ -26,6 +26,19 @@ https://github.com/spack/spack hpc,package-management
 https://github.com/singularityhub/sregistry containers,singularity
 ```
 
+### `label`
+
+**optional** By default, the repository will filter down to issues labeled with "good first issue".
+However, you can change this by setting this variable to something else.
+
+
+### `collection`
+
+**optional** By default, the issues will each produce a markdown file to add to the "docs" GitHub pages folder,
+in a subfolder named by this variable, which defaults to _issues. If you produce a site that has more
+than one collection, you can change this to something else.
+
+
 ## Example usage
 
 ```yaml
@@ -33,15 +46,42 @@ https://github.com/singularityhub/sregistry containers,singularity
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Generate First Issues
-      uses: rseng/good-first-issues@v1.0.1
+      uses: rseng/good-first-issues@v1.0.2
       with:
         repos-file: '.github/repos.txt'
         token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 You only need to define repos-file if you change the path (note that the above is changed from .github/repos.txt). It's
-highly recommended that you don't use master branch, but instead
-a version release or commit (as shown above).
+highly recommended that you don't use master branch, but instead a version release or commit (as shown above).
+Here is how you might update the label used:
+
+```yaml
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Generate First Issues
+      uses: rseng/good-first-issues@v1.0.2
+      with:
+        label: 'bug'
+        token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Finally, if I want to instead output to a folder called `_another` (a Jekyll collection name)
+as a relative path to the docs folder, I can set that as follows:
+
+
+```yaml
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Generate First Issues
+      uses: rseng/good-first-issues@v1.0.2
+      with:
+        collection: '_another'
+        token: ${{ secrets.GITHUB_TOKEN }}
+```
+
 
 ## Examples
 

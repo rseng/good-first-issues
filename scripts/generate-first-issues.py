@@ -10,6 +10,8 @@ api_base = "https://api.github.com/repos/{repo}/issues"
 
 # GitHub Workflow - we get variables from environment
 REPOS_FILE = os.environ.get("REPOS_FILE")
+ISSUE_LABEL = os.environ.get("ISSUE_LABEL", "good first issue")
+COLLECTION_FOLDER = os.environ.get("COLLECTION_FOLDER", "_issues")
 if not REPOS_FILE:
     sys.exit(f"{REPOS_FILE} must be defined.")
 
@@ -26,17 +28,28 @@ with open(REPOS_FILE, "r") as filey:
 
 # Must authenticate
 headers = {"Authorization": f"token {token}"}
-data = {"state": "open", "labels": "good first issue"}
+data = {"state": "open", "labels": ISSUE_LABEL}
 
 # Documentation base is located at docs
-output_dir = "/github/workspace/docs/_issues"
+output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
+
+# Print metadata for user
+print("Issue label: [%s]" % ISSUE_LABEL)
+print("Collection output folder: [%s]" % output_dir)
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
 # Load repos
 for line in lines:
-    repo, extra_tags = line.strip().split(" ")
+
+    # Extra tags are optional, separated by comma
+    extra_tags = ""
+    try:
+        repo, extra_tags = line.strip().split(" ")
+    except ValueError:
+        repo = line.strip()    
+
     extra_tags = extra_tags.split(",")
     repo = "/".join(repo.split("/")[-2:])
     url = api_base.format(repo=repo)
@@ -60,7 +73,7 @@ for line in lines:
 
         # Add labels as tags
         tags = set([x["name"] for x in issue["labels"]])
-        tags.remove("good first issue")
+        tags.remove(ISSUE_LABEL)
         tags = list(tags)
 
         if extra_tags:
