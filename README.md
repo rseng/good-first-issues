@@ -46,7 +46,7 @@ than one collection, you can change this to something else.
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Generate First Issues
-      uses: rseng/good-first-issues@v1.0.2
+      uses: rseng/good-first-issues@v1.0.3
       with:
         repos-file: '.github/repos.txt'
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +61,7 @@ Here is how you might update the label used:
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Generate First Issues
-      uses: rseng/good-first-issues@v1.0.2
+      uses: rseng/good-first-issues@v1.0.3
       with:
         label: 'bug'
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -76,7 +76,7 @@ as a relative path to the docs folder, I can set that as follows:
     - name: Checkout Code
       uses: actions/checkout@v2
     - name: Generate First Issues
-      uses: rseng/good-first-issues@v1.0.2
+      uses: rseng/good-first-issues@v1.0.3
       with:
         collection: '_another'
         token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+import json
 import os
 import requests
 import sys
@@ -48,7 +49,7 @@ for line in lines:
     try:
         repo, extra_tags = line.strip().split(" ")
     except ValueError:
-        repo = line.strip()    
+        repo = line.strip()
 
     extra_tags = extra_tags.split(",")
     repo = "/".join(repo.split("/")[-2:])
@@ -81,9 +82,12 @@ for line in lines:
         if tags:
             tags = [x.replace(":", "").replace(" ", "-") for x in tags]
             tags.sort()
+            print("Adding tags %s" % ",".join(tags))
             content += "tags: %s\n" % (",".join(tags))
-        for param in ["title", "html_url"]:
-            content += '%s: "%s"\n' % (param, issue[param])
+
+        # Title must have quotes escaped
+        content += 'title: %s\n' % json.dumps(issue["title"])
+        content += 'html_url: "%s"\n' % issue["html_url"]
         content += "user: %s\n" % (issue["user"]["login"])
         content += "repo: %s\n" % repo
         content += "---\n\n"
