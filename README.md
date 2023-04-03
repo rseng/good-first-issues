@@ -44,7 +44,7 @@ than one collection, you can change this to something else.
 ```yaml
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Generate First Issues
       uses: rseng/good-first-issues@v1.0.3
       with:
@@ -59,7 +59,7 @@ Here is how you might update the label used:
 ```yaml
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Generate First Issues
       uses: rseng/good-first-issues@v1.0.3
       with:
@@ -74,7 +74,7 @@ as a relative path to the docs folder, I can set that as follows:
 ```yaml
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Generate First Issues
       uses: rseng/good-first-issues@v1.0.3
       with:
@@ -82,9 +82,64 @@ as a relative path to the docs folder, I can set that as follows:
         token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+A full (realistic) workflow might look like the following:
+
+```yaml
+name: good-first-issues
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: 0 2 * * *
+  - cron: 5 15 * * *
+  - cron: 5 10 * * *
+  - cron: 5 20 * * *
+  push:
+    branches:
+      - main
+
+jobs:
+  good-first-issues:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate First Issues
+      uses: rseng/good-first-issues@v1.0.3
+      with:
+        repos-file: '.github/repos.txt'
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update Repository
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        UPDATE_BRANCH: "main"
+      run: |
+        printf "GitHub Actor: ${GITHUB_ACTOR}\n"
+        git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        git branch
+        printf "Branch to push to is ${UPDATE_BRANCH}\n"
+        git checkout ${UPDATE_BRANCH} || git checkout -b ${UPDATE_BRANCH}
+        git branch
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@users.noreply.github.com"
+        git pull origin ${UPDATE_BRANCH}
+        git add docs/*
+        git add docs/_issues/*
+        if git diff-index --quiet HEAD --; then
+           printf "No changes\n"
+        else
+           printf "Changes\n"
+           git commit -m "Automated deployment to update first issues $(date '+%Y-%m-%d')"
+           git push origin ${UPDATE_BRANCH}
+        fi
+```
+
+Note that we use another step to push to our main branch. Actions cannot trigger other actions, so the
+workflow will not be triggered again.
 
 ## Examples
 
+ - [hpc-social](https://github.com/hpc-social/good-first-issues): a dark themed branded Good First Issues board
  - [awesome-rseng](https://github.com/rseng/awesome-rseng/blob/master/.github/workflows/generate-first-issues.yml) to generate first issues from the awesome-rseng repository, with repos listed in [.github/repos.txt](https://github.com/rseng/awesome-rseng/blob/master/.github/repos.txt)
 
 ## Questions
