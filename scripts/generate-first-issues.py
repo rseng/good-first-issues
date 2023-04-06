@@ -32,6 +32,7 @@ headers = {"Authorization": f"token {token}"}
 data = {"state": "open", "labels": ISSUE_LABEL}
 
 # Documentation base is located at docs
+# This is expected to be run in a GitHub action
 output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
 
 # Print metadata for user
@@ -42,6 +43,7 @@ if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
 # Load repos
+seen = set()
 for line in lines:
 
     # Extra tags are optional, separated by comma
@@ -56,11 +58,20 @@ for line in lines:
     url = api_base.format(repo=repo)
 
     print("Looking up issues for %s" % repo)
+    if url in seen:
+        continue
+    seen.add(url)
 
     # This will return the first
     response = requests.get(url, headers=headers, params=data)
     if response.status_code != 200:
-        sys.exit("Error with response %s: %s" % (response.status_code, response.reason))
+        print(
+            "Issue with response %s: %s, sleeping"
+            % (response.status_code, response.reason)
+        )
+        time.sleep(60)
+        continue
+
     issues = response.json()
 
     # For each issue, write a markdown file
@@ -74,14 +85,21 @@ for line in lines:
 
         # Add labels as tags
         tags = list([x["name"] for x in issue["labels"]])
+        if ISSUE_LABEL in tags:
+            tags.remove(ISSUE_LABEL)
 
         if extra_tags:
             tags = tags + extra_tags
         if tags:
             tags = [x.replace(":", "").replace(" ", "-") for x in tags]
+            tags = [x for x in tags if x]
             tags.sort()
-            print("Adding tags %s" % ",".join(tags))
-            content += "tags: %s\n" % (",".join(tags))
+            if tags:
+                print("Adding tags %s" % ",".join(tags))
+                content += "tags: %s\n" % (",".join(tags))
+
+        # Sometimes people leave the body empty
+        body = issue["body"] or issue["title"]
 
         # Title must have quotes escaped
         content += "title: %s\n" % json.dumps(issue["title"])
@@ -89,7 +107,7 @@ for line in lines:
         content += "user: %s\n" % (issue["user"]["login"])
         content += "repo: %s\n" % repo
         content += "---\n\n"
-        content += issue["body"]
+        content += body
 
         # Output to ../docs/_issues
         with open(filename, "w") as filey:
