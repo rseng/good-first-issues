@@ -72,7 +72,7 @@ def generate_markdown(line):
             % (response.status_code, response.reason)
         )
         time.sleep(60)
-        continue
+        return None, None
 
     issues = response.json()
 
@@ -119,6 +119,8 @@ for line in lines:
     # Output to ../docs/_issues
     try:
         filename, content = generate_markdown(line)
+        if not filename or not content:
+            continue
         with open(filename, "w") as filey:
             filey.writelines(content)
     except:
