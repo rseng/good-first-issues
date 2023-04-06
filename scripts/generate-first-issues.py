@@ -46,6 +46,7 @@ print("Collection output folder: [%s]" % output_dir)
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
+
 def generate_markdown(line):
     """
     Generate markdown for a repo / tags
@@ -110,6 +111,7 @@ def generate_markdown(line):
         content += "---\n\n"
         content += body
     return filename, content
+
 
 # Load repos
 for line in lines:
