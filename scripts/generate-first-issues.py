@@ -110,5 +110,8 @@ for line in lines:
         content += body
 
         # Output to ../docs/_issues
-        with open(filename, "w") as filey:
-            filey.writelines(content)
+        try:
+            with open(filename, "w") as filey:
+                filey.writelines(content)
+        except:
+            print(f"Issue saving issue for {filename}")
