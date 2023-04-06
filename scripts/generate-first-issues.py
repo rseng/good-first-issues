@@ -74,7 +74,8 @@ for line in lines:
 
         # Add labels as tags
         tags = set([x["name"] for x in issue["labels"]])
-        tags.remove(ISSUE_LABEL)
+        if ISSUE_LABEL in tags:
+            tags.remove(ISSUE_LABEL)
         tags = list(tags)
 
         if extra_tags:
@@ -86,7 +87,7 @@ for line in lines:
             content += "tags: %s\n" % (",".join(tags))
 
         # Title must have quotes escaped
-        content += 'title: %s\n' % json.dumps(issue["title"])
+        content += "title: %s\n" % json.dumps(issue["title"])
         content += 'html_url: "%s"\n' % issue["html_url"]
         content += "user: %s\n" % (issue["user"]["login"])
         content += "repo: %s\n" % repo
