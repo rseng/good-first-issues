@@ -37,7 +37,7 @@ data = {"state": "open", "labels": ISSUE_LABEL}
 output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
 
 # Clear out previous issues, might be old
-shutil.rmtree(outdir_dir)
+shutil.rmtree(output_dir)
 os.makedirs(output_dir)
 
 # Print metadata for user
