@@ -1,5 +1,6 @@
 #!/bin/bash
 
+import shutil
 import json
 import os
 import requests
