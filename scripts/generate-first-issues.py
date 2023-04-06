@@ -36,17 +36,12 @@ data = {"state": "open", "labels": ISSUE_LABEL}
 # This is expected to be run in a GitHub action
 output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
 
-# Clear out previous issues, might be old
-shutil.rmtree(output_dir)
-os.makedirs(output_dir)
-
 # Print metadata for user
 print("Issue label: [%s]" % ISSUE_LABEL)
 print("Collection output folder: [%s]" % output_dir)
 
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
-
 
 def generate_markdown(line):
     """
