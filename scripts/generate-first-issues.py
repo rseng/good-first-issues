@@ -73,10 +73,7 @@ for line in lines:
         content = "---\n"
 
         # Add labels as tags
-        tags = set([x["name"] for x in issue["labels"]])
-        if ISSUE_LABEL in tags:
-            tags.remove(ISSUE_LABEL)
-        tags = list(tags)
+        tags = list([x["name"] for x in issue["labels"]])
 
         if extra_tags:
             tags = tags + extra_tags
