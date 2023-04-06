@@ -35,6 +35,10 @@ data = {"state": "open", "labels": ISSUE_LABEL}
 # This is expected to be run in a GitHub action
 output_dir = "/github/workspace/docs/%s" % COLLECTION_FOLDER
 
+# Clear out previous issues, might be old
+shutil.rmtree(outdir_dir)
+os.makedirs(output_dir)
+
 # Print metadata for user
 print("Issue label: [%s]" % ISSUE_LABEL)
 print("Collection output folder: [%s]" % output_dir)
@@ -42,10 +46,10 @@ print("Collection output folder: [%s]" % output_dir)
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
-# Load repos
-seen = set()
-for line in lines:
-
+def generate_markdown(line):
+    """
+    Generate markdown for a repo / tags
+    """
     # Extra tags are optional, separated by comma
     extra_tags = ""
     try:
@@ -58,9 +62,6 @@ for line in lines:
     url = api_base.format(repo=repo)
 
     print("Looking up issues for %s" % repo)
-    if url in seen:
-        continue
-    seen.add(url)
 
     # This will return the first
     response = requests.get(url, headers=headers, params=data)
@@ -108,10 +109,18 @@ for line in lines:
         content += "repo: %s\n" % repo
         content += "---\n\n"
         content += body
+    return filename, content
 
-        # Output to ../docs/_issues
-        try:
-            with open(filename, "w") as filey:
-                filey.writelines(content)
-        except:
-            print(f"Issue saving issue for {filename}")
+# Load repos
+for line in lines:
+
+    # Output to ../docs/_issues
+    try:
+        filename, content = generate_markdown(line)
+        with open(filename, "w") as filey:
+            filey.writelines(content)
+    except:
+        print(f"Issue saving issue for {filename}")
+
+count = os.listdir(output_dir)
+print(f"Found {count} total issues.")
