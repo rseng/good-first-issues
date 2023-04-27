@@ -43,6 +43,7 @@ print("Collection output folder: [%s]" % output_dir)
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
+
 def generate_markdown(line):
     """
     Generate markdown for a repo / tags
@@ -71,6 +72,7 @@ def generate_markdown(line):
         return None, None
 
     issues = response.json()
+    results = []
 
     # For each issue, write a markdown file
     for issue in issues:
@@ -106,21 +108,28 @@ def generate_markdown(line):
         content += "repo: %s\n" % repo
         content += "---\n\n"
         content += body
-    return filename, content
+        results.append((filename, content))
+
+    return results
 
 
 # Load repos
 for line in lines:
+    try:
+        results = generate_markdown(line)
+    except:
+        continue
 
     # Output to ../docs/_issues
-    try:
-        filename, content = generate_markdown(line)
-        if not filename or not content:
-            continue
-        with open(filename, "w") as filey:
-            filey.writelines(content)
-    except:
-        print(f"Issue saving issue for {filename}")
+    for result in results:
+        try:
+            filename, content = result
+            if not filename or not content:
+                continue
+            with open(filename, "w") as filey:
+                filey.writelines(content)
+        except:
+            print(f"Issue saving issue for {filename}")
 
 count = os.listdir(output_dir)
 print(f"Found {count} total issues.")
